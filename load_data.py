@@ -1,4 +1,49 @@
 import pandas as pd
+import csv
 
 def read_data():
-    dataset = pd.read_csv('cleveland.data', ' ')
+    dataset = []
+    # Every 10 lines are one row in the data table
+    dataset_row = []
+    line_count = 0
+    with open('cleveland.data') as file:
+        reader = csv.reader(file, delimiter=' ')
+        for line in reader:
+            #delete name field
+            if ("name" in line):
+                del line[4]
+            line = [float(i) for i in line]
+            if line_count == 9:
+                dataset_row += line
+                dataset.append(dataset_row)
+                dataset_row= []
+                line_count = 0
+            else:
+                dataset_row += line
+            line_count += 1
+
+    # columns of the dataset
+    column_names = ["ID", "SSN", "age", "sex", "painloc", "painexer", "relrest", "pncaden",
+    "CP", "trestbps", "htn", "chol", "smoke", "cigs", "years", "FBS", "DM", "famhist",
+    "restecg", "ekgmo", "ekgday", "ekgyr", "dig", "prop", "nitr", "pro", "diuretic", "proto",
+    "thaldur", "thaltime", "met", "thalach", "thalrest", "tpeakbps", "tpeakbpd", "dummy", "trestbpd",
+    "exang", "xhypo", "oldpeak", "slope", "rldv5", "rldv5e", "ca", "restckm", "exerckm",
+    "restef", "restwm", "exeref", "exerwm", "thal", "thalsev", "thalpul", "earlobe",
+    "cmo", "cday", "cyr", "num", "lmt", "ladprox", "laddist", "diag", "cxmain", "ramus",
+    "om1", "om2", "rcaprox", "rcadist", "lvx1", "lvx2", "lvx3", "lvx4", "lvf", "cathef",
+    "junk"]
+
+    df = pd.DataFrame(dataset, columns=column_names)
+
+    # Now get rid of all the columns that have the description "not used" in the
+    # data description
+    df.drop(columns = ["thalsev", "thalpul", "earlobe", "lvx1", "lvx2"])
+    df.drop(columns = ["lvx3", "lvx4", "lvf", "cathef", "junk"])
+
+    # Get rid of ID number, SSN, dummy column
+    df.drop(columns = ["ID", "SSN", "dummy"])
+
+    # Get rid of columns that have the description "irrelevant" in the data description
+    df.drop(columns = ["restckm", "exerckm"])
+
+    return df

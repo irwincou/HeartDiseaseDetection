@@ -1,3 +1,5 @@
 from load_data import read_data
+import pandas as pd
 
-read_data()
+dataset = read_data()
+print(dataset.head())
