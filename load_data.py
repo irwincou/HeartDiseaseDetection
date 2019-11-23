@@ -1,2 +1,4 @@
-def read_data:
-    pass
+import pandas as pd
+
+def read_data():
+    dataset = pd.read_csv('cleveland.data', ' ')
