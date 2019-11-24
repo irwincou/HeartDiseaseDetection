@@ -30,7 +30,6 @@ def read_data():
     "om1", "om2", "rcaprox", "rcadist", "lvx1", "lvx2", "lvx3", "lvx4", "lvf", "cathef",
     "junk"]
 
-
     df = pd.DataFrame(dataset, columns=column_names)
 
     # Now get rid of all the columns that have the description "not used" in the
@@ -43,6 +42,19 @@ def read_data():
 
     # Get rid of columns that have the description "irrelevant" in the data description
     df = df.drop(columns = ["restckm", "exerckm"])
+
+    # 1, 2, 3, 4 in the num column all represent sick
+    # Combine so that its just 1 represents sick
+    y = df["num"].values
+    y_updated = []
+    for val in y:
+        if (val == 2 or val == 3 or val == 4):
+            y_updated.append(1)
+        else:
+            y_updated.append(val)
+
+    df = df.drop(columns = ["num"])
+    df["num"] = y_updated
 
     return df
 
