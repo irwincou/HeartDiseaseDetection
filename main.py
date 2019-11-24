@@ -27,7 +27,7 @@ print("Fitness of the standard features typically included", fitness_function(st
 
 population = []
 population_fitness = []
-# Start off by generating 100 random solutions
+# Start off by generating 10 random solutions
 for solution_idx in range(10):
     solution = generate_random_solution(dataset)
     population.append(solution)
