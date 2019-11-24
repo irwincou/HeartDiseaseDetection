@@ -5,22 +5,19 @@ def read_data():
     dataset = []
     # Every 10 lines are one row in the data table
     dataset_row = []
-    line_count = 0
     with open('cleveland.data') as file:
         reader = csv.reader(file, delimiter=' ')
         for line in reader:
             #delete name field
             if ("name" in line):
                 del line[4]
-            line = [float(i) for i in line]
-            if line_count == 9:
+                line = [float(i) for i in line]
                 dataset_row += line
                 dataset.append(dataset_row)
                 dataset_row= []
-                line_count = 0
             else:
+                line = [float(i) for i in line]
                 dataset_row += line
-            line_count += 1
 
     # columns of the dataset
     column_names = ["ID", "SSN", "age", "sex", "painloc", "painexer", "relrest", "pncaden",
@@ -33,17 +30,23 @@ def read_data():
     "om1", "om2", "rcaprox", "rcadist", "lvx1", "lvx2", "lvx3", "lvx4", "lvf", "cathef",
     "junk"]
 
+
     df = pd.DataFrame(dataset, columns=column_names)
 
     # Now get rid of all the columns that have the description "not used" in the
     # data description
-    df.drop(columns = ["thalsev", "thalpul", "earlobe", "lvx1", "lvx2"])
-    df.drop(columns = ["lvx3", "lvx4", "lvf", "cathef", "junk"])
+    df = df.drop(columns = ["thalsev", "thalpul", "earlobe", "lvx1", "lvx2"])
+    df = df.drop(columns = ["lvx3", "lvx4", "lvf", "cathef", "junk"])
 
     # Get rid of ID number, SSN, dummy column
-    df.drop(columns = ["ID", "SSN", "dummy"])
+    df = df.drop(columns = ["ID", "SSN", "dummy"])
 
     # Get rid of columns that have the description "irrelevant" in the data description
-    df.drop(columns = ["restckm", "exerckm"])
+    df = df.drop(columns = ["restckm", "exerckm"])
 
     return df
+
+# For now, just delete the rows that contain a nan
+def clean_data(dataset):
+    dataset = dataset.dropna()
+    return(dataset)
