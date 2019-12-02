@@ -86,6 +86,7 @@ while (population_fitness_sorted[0] < 1):
     # Half crossover of two best solutions
     population[9] = half_crossover(population[0], population[1])
 
+    # Sort the individuals in the population
     population_fitness = []
     for individual in population:
         population_fitness.append(fitness_function(individual))

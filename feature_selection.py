@@ -74,21 +74,20 @@ def half_crossover(dataset1, dataset2):
     return new_dataframe
 
 # Creates two random mutations in the feature set
-# TODO: finish mutation
 def mutation(dataset, all_features):
-    # y = dataset["num"].values
-    # dataset = dataset.drop(columns = ["num"])
-    # mutation_index_1 = random.randrange(1, len(dataset.columns))
-    # mutation_index_2 = random.randrange(1, len(dataset.columns))
-    # dataset = dataset.drop(mutation_index_1)
-    # dataset = dataset.drop(mutation_index_2)
-    # new_feature_index_1 = random.randrange(1, len(all_features.columns))
-    # new_feature_index_2 = random.randrange(1, len(all_features.columns))
-    # new_feature_name_1 = all_features.columns[new_feature_index_1]
-    # new_feature_name_2 = all_features.columns[new_feature_index_2]
-    # dataset[new_feature_name_1] = all_features[new_feature_name_1]
-    # dataset[new_feature_name_2] = all_features[new_feature_name_2]
-    # dataset["num"] = y
+    y = dataset["num"].values
+    dataset = dataset.drop(columns = ["num"])
+    mutation_index_1 = random.randrange(len(dataset.columns)-1)
+    dataset = dataset.drop(dataset.columns[mutation_index_1], axis=1)
+    mutation_index_2 = random.randrange(len(dataset.columns)-1)
+    dataset = dataset.drop(dataset.columns[mutation_index_2], axis=1)
+    new_feature_index_1 = random.randrange(len(all_features.columns))
+    new_feature_index_2 = random.randrange(len(all_features.columns))
+    new_feature_name_1 = all_features.columns[new_feature_index_1]
+    new_feature_name_2 = all_features.columns[new_feature_index_2]
+    dataset[new_feature_name_1] = all_features[new_feature_name_1]
+    dataset[new_feature_name_2] = all_features[new_feature_name_2]
+    dataset["num"] = y
     return dataset
 
 # Sort the population based on fitness
