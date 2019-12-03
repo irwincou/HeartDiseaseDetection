@@ -96,3 +96,12 @@ def sort_pop(population, population_fitness):
     population_sorted = copy.deepcopy(population)
     population_fitness_sorted, population_sorted = [list(x) for x in zip(*sorted(zip(population_fitness_sorted, population_sorted), key=lambda pair: pair[0], reverse=True))]
     return population_sorted, population_fitness_sorted
+
+# TODO: remove duplicates from mutation and crossover
+def remove_duplicates(dataset, all_features):
+    dataset = dataset.loc[:,~dataset.columns.duplicated()]
+    while (len(dataset.columns) < 14):
+        new_feature_index = random.randrange(len(all_features.columns))
+        new_feature_name = all_features.columns[new_feature_index]
+        dataset[new_feature_name] = all_features[new_feature_name]
+    return dataset

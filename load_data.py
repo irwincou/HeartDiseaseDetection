@@ -43,6 +43,7 @@ def read_data():
     # Get rid of columns that have the description "irrelevant" in the data description
     df = df.drop(columns = ["restckm", "exerckm"])
 
+
     # 1, 2, 3, 4 in the num column all represent sick
     # Combine so that its just 1 represents sick
     y = df["num"].values

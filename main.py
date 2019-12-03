@@ -6,6 +6,7 @@
 # Python's pandas documentation
 # https://gist.github.com/rlabbe/ea3444ef48641678d733
 # https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-6fcd0170be9c
+# https://stackoverflow.com/questions/14984119/python-pandas-remove-duplicate-columns
 
 from load_data import read_data
 from load_data import clean_data
@@ -15,6 +16,7 @@ from feature_selection import sort_pop
 from feature_selection import random_crossover
 from feature_selection import mutation
 from feature_selection import half_crossover
+from feature_selection import remove_duplicates
 import pandas as pd
 import random
 import time
@@ -25,7 +27,9 @@ random.seed(1)
 time.sleep(1)
 
 dataset = read_data()
-dataset = clean_data(dataset)
+# dataset = clean_data(dataset)
+print("!!!!!!!!!")
+print(len(dataset.index))
 
 print("Fitness if using all features", fitness_function(dataset))
 
@@ -62,14 +66,14 @@ while (population_fitness_sorted[0] < 1):
     # TODO: figure out why the fitness sometimes decreases if we
     # are always taking the most fit individual
     # Random crossover of best two solutions
-    population[1] = random_crossover(population[0], population[1])
+    population[1] = remove_duplicates(random_crossover(population[0], population[1]), dataset)
 
     # Crossover of two random solutions
     solution1 = random.randrange(len(population))
     solution2 = random.randrange(len(population))
     while (solution2 == solution1):
         solution2 = random.randrange(len(population))
-    population[2] = random_crossover(population_sorted[solution1], population_sorted[solution2])
+    population[2] = remove_duplicates(random_crossover(population_sorted[solution1], population_sorted[solution2]), dataset)
 
     # Three new random solutions
     population[3] = generate_random_solution(dataset)
@@ -77,25 +81,33 @@ while (population_fitness_sorted[0] < 1):
     population[5] = generate_random_solution(dataset)
 
     # Mutation to most fit solution
-    population[6] = mutation(population[0], dataset)
-    population[7] = mutation(population[0], dataset)
+    population[6] = remove_duplicates(mutation(population[0], dataset), dataset)
+    population[7] = remove_duplicates(mutation(population[0], dataset), dataset)
 
     # Mutation to second most fit solution
-    population[8] = mutation(population[1], dataset)
+    population[8] = remove_duplicates(mutation(population[1], dataset), dataset)
 
     # Half crossover of two best solutions
-    population[9] = half_crossover(population[0], population[1])
+    population[9] = remove_duplicates(half_crossover(population[0], population[1]), dataset)
 
     # Sort the individuals in the population
     population_fitness = []
-    for individual in population:
-        population_fitness.append(fitness_function(individual))
+
+    for index, individual in enumerate(population):
+        if (index == 0):
+            new_fitness = fitness_function(individual)
+            if (new_fitness > population_fitness_sorted[0]):
+                population_fitness.append(new_fitness)
+            else:
+                population_fitness.append(population_fitness_sorted[0])
+        else:
+            population_fitness.append(fitness_function(individual))
     population_sorted, population_fitness_sorted = sort_pop(population, population_fitness)
 
     if population_fitness_sorted[0] == 1:
         print("No missclassifications!")
         print("Feature set:")
-        print(population_sorted[0])
+        print(population_sorted[0].columns)
     iterations.append(iteration)
     best_fitnesses.append(max(population_fitness))
 
@@ -105,5 +117,6 @@ while (population_fitness_sorted[0] < 1):
     plt.plot(iterations, best_fitnesses)
 
     fig.canvas.draw()
+    plt.savefig('features.png')
 
     iteration += 1
