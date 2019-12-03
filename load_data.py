@@ -5,19 +5,20 @@ def read_data():
     dataset = []
     # Every 10 lines are one row in the data table
     dataset_row = []
-    with open('cleveland.data') as file:
-        reader = csv.reader(file, delimiter=' ')
-        for line in reader:
-            #delete name field
-            if ("name" in line):
-                del line[4]
-                line = [float(i) for i in line]
-                dataset_row += line
-                dataset.append(dataset_row)
-                dataset_row= []
-            else:
-                line = [float(i) for i in line]
-                dataset_row += line
+    for location in ['cleveland.data', 'hungarian.data', 'switzerland.data', 'long-beach-va.data']:
+        with open(location) as file:
+            reader = csv.reader((x.replace('\0', '') for x in file), delimiter=' ')
+            for line in reader:
+                #delete name field
+                if ("name" in line):
+                    del line[4]
+                    line = [float(i) for i in line]
+                    dataset_row += line
+                    dataset.append(dataset_row)
+                    dataset_row= []
+                else:
+                    line = [float(i) for i in line]
+                    dataset_row += line
 
     # columns of the dataset
     column_names = ["ID", "SSN", "age", "sex", "painloc", "painexer", "relrest", "pncaden",
@@ -61,5 +62,6 @@ def read_data():
 
 # For now, just delete the rows that contain a nan
 def clean_data(dataset):
-    dataset = dataset.dropna()
+    # dataset = dataset.dropna()
+    dataset = dataset.interpolate(method='linear')
     return(dataset)

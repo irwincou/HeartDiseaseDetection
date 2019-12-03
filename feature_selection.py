@@ -21,7 +21,7 @@ time.sleep(1)
 def fitness_function(dataset):
     y = dataset["num"].values
     dataset = dataset.drop(columns = ["num"])
-    X_train, X_test, y_train, y_test = train_test_split(dataset, y, test_size=0.60)
+    X_train, X_test, y_train, y_test = train_test_split(dataset, y, test_size=0.30)
     scaler = StandardScaler()
     scaler.fit(X_train)
     X_train = scaler.transform(X_train)
