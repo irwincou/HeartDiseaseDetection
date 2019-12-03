@@ -27,7 +27,7 @@ random.seed(1)
 time.sleep(1)
 
 dataset = read_data()
-# dataset = clean_data(dataset)
+dataset = clean_data(dataset)
 print("!!!!!!!!!")
 print(len(dataset.index))
 
@@ -118,5 +118,8 @@ while (population_fitness_sorted[0] < 1):
 
     fig.canvas.draw()
     plt.savefig('features.png')
+    file1 = open("features.txt","a")
+    file1.write(str(population_sorted[0].columns))
+    file1.close()
 
     iteration += 1

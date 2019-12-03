@@ -62,6 +62,6 @@ def read_data():
 
 # For now, just delete the rows that contain a nan
 def clean_data(dataset):
-    # dataset = dataset.dropna()
-    dataset = dataset.interpolate(method='linear')
+    dataset = dataset.dropna()
+    # dataset = dataset.interpolate(method='linear')
     return(dataset)
